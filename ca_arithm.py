@@ -1,29 +1,31 @@
 from PIL import Image
 
-# first implementation w/ string dict
+# arithmetic rule implementation
 
 def make_rule(rule_number):
-    outputs = [int(n) for n in format(rule_number, "08b")]
-    int_inputs = list(range(2**neighborhood_size))
-    inputs = [format(y, "03b") for y in int_inputs]
-    inputs = list(reversed(inputs))  # wolfram style
-    rule = {inputs[i]:outputs[i] for i in range(2**neighborhood_size)}
+    rule = [int(n) for n in format(rule_number, "08b")]
+    rule = list(reversed(rule))  # wolfram style
     # print(rule)
     return rule
 
-def apply_rule(rule, values):
-    v = "".join(str(x) for x in values)
-    return rule[v]
+def apply_rule(rule, value):
+    # print(value)
+    return rule[value]
 
 def make_generation(rule, previous_gen):
     gen = []
-    neighborhood = list(range(-(neighborhood_size//2), neighborhood_size//2 + 1))
-    # print(neighborhood)
-    for i in range(len(previous_gen)):
-        neighbors = [(i + x)%len(previous_gen) for x in neighborhood]
-        values = [previous_gen[x] for x in neighbors]
-        output = apply_rule(rule, values)
+    indexes = list(range(-(neighborhood_size//2), neighborhood_size//2 + 1))
+    neighbors = [previous_gen[x] for x in indexes]
+    value = sum([neighbors[i]*pows[i] for i in range(neighborhood_size)])
+    index1 = indexes[0]
+    last = indexes[-1]
+    for _ in range(len(previous_gen)):
+        first = previous_gen[index1]*pows[0]
+        output = apply_rule(rule, value)
         gen.append(output)
+        index1 = (index1+1)%len(previous_gen)
+        last = (last+1)%len(previous_gen)
+        value = 2*(value - first) + previous_gen[last]
     # print(gen)
     return gen
 
@@ -49,5 +51,7 @@ def run_ca(rule_number, inpt, steps):
 steps = 100
 inpt = 100*[0] + [1] + 100*[0]
 neighborhood_size = 3
+pows = [2**i for i in range(neighborhood_size-1,-1,-1)]
+# print(pows)
 rule_number = 90
 run_ca(rule_number, inpt, steps)
