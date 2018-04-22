@@ -39,13 +39,19 @@ def render_ca(generations):
                 pixels[j,i] = (0,0,0)
     img.show()
 
+def plot_ca(generations):
+    import matplotlib.pyplot as plt
+    plt.matshow(generations, cmap=plt.get_cmap("binary"))
+    plt.show()
+
 def run_ca(rule_number, inpt, steps):
     rule = make_rule(rule_number)
     generations = [inpt]
     for i in range(steps):
         current = generations[-1]
         generations.append(make_generation(rule, current))
-    render_ca(generations)
+    # render_ca(generations)
+    plot_ca(generations)
 
 
 steps = 100
