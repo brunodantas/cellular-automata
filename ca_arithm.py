@@ -30,6 +30,8 @@ def make_generation(rule, previous_gen):
     return gen
 
 def render_ca(generations):
+    from matplotlib.pyplot import imshow
+    from numpy import asarray
     w,h = len(generations[0]), len(generations)
     img = Image.new("RGB", (w,h), (255,255,255))
     pixels = img.load()
@@ -37,7 +39,8 @@ def render_ca(generations):
         for j in range(len(generations[0])):
             if generations[i][j] == 1:
                 pixels[j,i] = (0,0,0)
-    img.show()
+    # img.show()
+    imshow(asarray(img))
 
 def plot_ca(generations):
     import matplotlib.pyplot as plt
@@ -51,7 +54,7 @@ def run_ca(rule_number, inpt, steps):
         current = generations[-1]
         generations.append(make_generation(rule, current))
     # render_ca(generations)
-    plot_ca(generations)
+    render_ca(generations)
 
 
 steps = 100
